@@ -1,6 +1,47 @@
 
 
 var demoChart = function() {
+
+  var data = {mentions:[],rts:[]};
+
+  $.getJSON('data.json', function(response){
+
+    //Nest real values
+    var nested = {};
+    $.each(response.data,function(i,e){
+      nested[e.ts] = e;
+    });
+
+    //Interval
+    var interval;
+    switch(response.interval){
+      case '1m':
+        interval = 60;
+      default:
+        interval = 60;
+    }
+
+    //Iterate and complete zero values
+    for (var s = response.start_point; s < response.end_point; s+=interval) {
+      if(typeof(nested[s])!="undefined"){
+        data.rts.push(nested[s].rt_count);
+        data.mentions.push(nested[s].reply_count);
+      } else {
+        data.rts.push(0);
+        data.mentions.push(0);
+      }
+    };
+
+    renderChart(data, response.start_point, interval);
+
+  });
+
+};
+
+var renderChart = function (data, start_point, interval){
+
+
+
   $('#chart').highcharts({
     credits: false,
     legend: {
@@ -112,26 +153,17 @@ var demoChart = function() {
         marker: {
           enabled: false
         },
-        pointInterval: 3600000, // one hour
-        pointStart: Date.UTC(2009, 9, 6, 0, 0, 0)
+        pointInterval: interval, // one hour
+        pointStart: start_point
       }
     },
     series: [{
       name: 'Mentions',
-      data: [4.3, 5.1, 4.3, 5.2, 5.4, 4.7, 3.5, 4.1, 5.6, 7.4, 6.9, 7.1,
-        7.9, 7.9, 7.5, 6.7, 7.7, 7.7, 7.4, 7.0, 7.1, 5.8, 5.9, 7.4,
-        8.2, 8.5, 9.4, 8.1, 10.9, 10.4, 10.9, 12.4, 12.1, 9.5, 7.5,
-        7.1, 7.5, 8.1, 6.8, 3.4, 2.1, 1.9, 2.8, 2.9, 1.3, 4.4, 4.2,
-        3.0, 3.0
-      ]
+      data: data.mentions
 
     }, {
       name: 'Retweets',
-      data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.3, 0.0,
-        0.0, 0.4, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        0.0, 0.6, 1.2, 1.7, 0.7, 2.9, 4.1, 2.6, 3.7, 3.9, 1.7, 2.3,
-        3.0, 3.3, 4.8, 5.0, 4.8, 5.0, 3.2, 2.0, 0.9, 0.4, 0.3, 0.5, 0.4
-      ]
+      data: data.rts
     }],
     navigation: {
       menuItemStyle: {
@@ -139,4 +171,7 @@ var demoChart = function() {
       }
     }
   });
+
+
+
 };
