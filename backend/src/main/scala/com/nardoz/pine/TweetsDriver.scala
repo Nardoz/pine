@@ -1,8 +1,9 @@
 
 package com.nardoz.pine
 
-import org.apache.spark.SparkConf
-import org.apache.spark.SparkContext
+import org.apache.spark._
+import org.apache.spark.SparkContext._
+import com.datastax.spark.connector._
 import com.nardoz.pine.Utils._
 
 object TweetsDriver extends App {
@@ -12,8 +13,8 @@ object TweetsDriver extends App {
     sys.exit(1)
   }
 
-  //  val filename = "../data/tweets.json.gz"
   val filename = args(0)
+  //  val filename = "../data/tweets.json.gz"
 
   val conf = new SparkConf()
   conf.setAppName("Nardoz.Pine TweetsDriver")
@@ -34,10 +35,12 @@ object TweetsDriver extends App {
     }
 
   val tweetsWithRTs = rts.join(tweets)
-  
-  tweetsWithRTs.
-  
-  
+
+  val rtsByTweetIdByMinute = tweetsWithRTs.groupBy {
+    case (tweetId, (rtTweet, originalTweet)) => (tweetId, originalTweet.screenName, rtTweet.createdAt)
+  }.map {
+    case ((tweetId, screenName, createdAt), it) => (tweetId, screenName, createdAt, it.size)
+  }
 
 }
 
