@@ -1,0 +1,10 @@
+{
+  "name": "PineWebApi",
+  "description": "web Api which wrapps cassandra",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "4.x",
+    "cassandra-client": "0.15.x"
+  }
+}

@@ -3,11 +3,13 @@ var express = require('express'),
 	port = 8001,
 	tweetController = require('./src/controllers/tweet').tweetController;
 
-app.get('/hello', function(req, res){
-	res.send("hello Nico!");
-});
+app.get('/api/:uid', tweetController.getByUserId);
 
-app.get('/tweet/:id', tweetController.getById);
+app.get('api/:uid/:tid', tweetController.getByTweetId);
+
+app.use(express.static('../ui'));
+
+
 
 console.log('Starting server on port: ' + port);
 app.listen(port);
