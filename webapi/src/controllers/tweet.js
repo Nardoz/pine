@@ -1,7 +1,5 @@
 function TweetController(){};
 
-TweetController.prototype.getById = function(req, res){
-	console.log("id: " + req.params.id);
 
 var mock = {
 "status":"ok",
@@ -71,9 +69,22 @@ var mock = {
 }
  
 ]
-}
+};
+
+
+TweetController.prototype.getById = function(req, res){
+	console.log("uid: " + req.params.uid);
+	console.log("tid: " + req.params.tid);
 
 	res.send(mock);
 };
+
+
+
+TweetController.prototype.getByUserId = function(req, res) {
+	console.log("getByUserId callled, uid: " + req.params.uid);
+	res.send(mock);
+}
+
 
 exports.tweetController = new TweetController();
