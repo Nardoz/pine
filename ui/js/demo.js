@@ -1,13 +1,21 @@
+
+
+function generateAvatarBar(avatars) {
+  
+} 
+
+
 $(function() {
   $('#container').highcharts({
+    credits: false,
+    legend: {
+      verticalAlign: 'top'
+    },
     chart: {
       type: 'spline'
     },
     title: {
-      text: 'Wind speed during two days'
-    },
-    subtitle: {
-      text: 'October 6th and 7th 2009 at two locations in Vik i Sogn, Norway'
+      text: ''
     },
     xAxis: {
       type: 'datetime',
@@ -17,13 +25,13 @@ $(function() {
     },
     yAxis: {
       title: {
-        text: 'Wind speed (m/s)'
+        text: 'Tweets'
       },
       min: 0,
       minorGridLineWidth: 0,
       gridLineWidth: 0,
       alternateGridColor: null,
-      plotBands: [{ // Light air
+/*      plotBands: [{ // Light air
         from: 0.3,
         to: 1.5,
         color: 'rgba(68, 170, 213, 0.1)',
@@ -93,10 +101,10 @@ $(function() {
             color: '#606060'
           }
         }
-      }]
+      }]*/
     },
     tooltip: {
-      valueSuffix: ' m/s'
+      valueSuffix: ' tweets'
     },
     plotOptions: {
       spline: {
@@ -114,7 +122,7 @@ $(function() {
       }
     },
     series: [{
-      name: 'Hestavollane',
+      name: 'Mentions',
       data: [4.3, 5.1, 4.3, 5.2, 5.4, 4.7, 3.5, 4.1, 5.6, 7.4, 6.9, 7.1,
         7.9, 7.9, 7.5, 6.7, 7.7, 7.7, 7.4, 7.0, 7.1, 5.8, 5.9, 7.4,
         8.2, 8.5, 9.4, 8.1, 10.9, 10.4, 10.9, 12.4, 12.1, 9.5, 7.5,
@@ -123,7 +131,7 @@ $(function() {
       ]
 
     }, {
-      name: 'Voll',
+      name: 'Retweets',
       data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.3, 0.0,
         0.0, 0.4, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
         0.0, 0.6, 1.2, 1.7, 0.7, 2.9, 4.1, 2.6, 3.7, 3.9, 1.7, 2.3,
