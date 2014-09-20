@@ -153,7 +153,7 @@ var renderChart = function (data, start_point, interval){
         marker: {
           enabled: false
         },
-        pointInterval: interval, // one hour
+        pointInterval: interval*1000, // one hour
         pointStart: start_point
       }
     },
