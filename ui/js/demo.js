@@ -1,12 +1,7 @@
 
 
-function generateAvatarBar(avatars) {
-  
-} 
-
-
-$(function() {
-  $('#container').highcharts({
+var demoChart = function() {
+  $('#chart').highcharts({
     credits: false,
     legend: {
       verticalAlign: 'top'
@@ -144,4 +139,4 @@ $(function() {
       }
     }
   });
-});
+};
