@@ -1,6 +1,40 @@
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 #container {
   min-width: 310px; 
   height: 400px; 
   margin: 0 auto;
+}
+
+ul {
+  list-style: none;
+}
+
+#pics {
+  margin-left: 82px;
+}
+
+#pics ul {
+  width: 98px;
+  text-align: center;
+  float: left;
+}
+
+#pics img {
+  width: 48px;
+  border-radius: 27px;
+  /*box-shadow: 2px 3px 4px #ddd;*/
+  border: 3px solid rgba(124, 181, 236, 0.5);
+  transition-duration: 0.08s;
+  transition-timing-function: ease-in;
+}
+
+#pics img:hover {
+  border: 3px solid rgba(124, 181, 236, 0.7);
+  width: 58px;
+  border-radius: 37px;
 }
