@@ -27,7 +27,6 @@ ul {
 #pics img {
   width: 48px;
   border-radius: 27px;
-  /*box-shadow: 2px 3px 4px #ddd;*/
   border: 3px solid rgba(124, 181, 236, 0.5);
   transition-duration: 0.08s;
   transition-timing-function: ease-in;
@@ -38,3 +37,26 @@ ul {
   width: 58px;
   border-radius: 37px;
 }
+
+#pics ul li:nth-child(1) img {
+  border: 3px solid rgba(124, 0, 236, 0.5);
+}
+#pics ul li:nth-child(1) img:hover {
+  border: 3px solid rgba(124, 0, 236, 0.7);
+}
+
+#pics ul li:nth-child(2) img {
+  border: 3px solid rgba(0, 181, 236, 0.5);
+}
+#pics ul li:nth-child(2) img:hover {
+  border: 3px solid rgba(0, 181, 236, 0.7);
+}
+
+#pics ul li:nth-child(3) img {
+  border: 3px solid rgba(0, 236, 236, 0.5);
+}
+#pics ul li:nth-child(3) img:hover {
+  border: 3px solid rgba(0, 236, 236, 0.7);
+}
+
+

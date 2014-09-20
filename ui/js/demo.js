@@ -1,3 +1,10 @@
+
+
+function generateAvatarBar(avatars) {
+  
+} 
+
+
 $(function() {
   $('#container').highcharts({
     credits: false,
