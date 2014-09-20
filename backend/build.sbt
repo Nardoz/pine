@@ -47,5 +47,6 @@ val sparkVersion = "1.0.2"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided" withSources() withJavadoc(),
-  "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0" withSources() withJavadoc()
+  "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0" withSources() withJavadoc(),
+  "org.json4s" %% "json4s-native" % "3.2.10"
 )

@@ -16,8 +16,7 @@ sbt assembly
 
 ## Usando Spark-Shell
 
-spark-shell -i extras/shell-init.scala --jars target/scala-2.10/pine-backend-assembly-0.1.0.jar
-
+sbt assembly && spark-shell -i extras/shell-init.scala --jars target/scala-2.10/pine-backend-assembly-0.1.0.jar
 
 
 
