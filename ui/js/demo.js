@@ -1,40 +1,37 @@
 
 
-var demoChart = function() {
+var demoChart = function(d) {
 
   var data = {mentions:[],rts:[]};
 
-  $.getJSON('data.json', function(response){
-
-    //Nest real values
-    var nested = {};
-    $.each(response.data,function(i,e){
-      nested[e.ts] = e;
-    });
-
-    //Interval
-    var interval;
-    switch(response.interval){
-      case '1m':
-        interval = 60;
-      default:
-        interval = 60;
-    }
-
-    //Iterate and complete zero values
-    for (var s = response.start_point; s < response.end_point; s+=interval) {
-      if(typeof(nested[s])!="undefined"){
-        data.rts.push(nested[s].rt_count);
-        data.mentions.push(nested[s].reply_count);
-      } else {
-        data.rts.push(0);
-        data.mentions.push(0);
-      }
-    };
-
-    renderChart(data, response.start_point, interval);
-
+  //Nest real values
+  var nested = {};
+  $.each(d.data,function(i,e){
+    nested[e.ts] = e;
   });
+
+  //Interval
+  var interval;
+  switch(d.interval){
+    case '1m':
+      interval = 60;
+    default:
+      interval = 60;
+  }
+
+  //Iterate and complete zero values
+  for (var s = d.start_point; s < d.end_point; s+=interval) {
+    if(typeof(nested[s])!="undefined"){
+      data.rts.push(nested[s].rt_count);
+      data.mentions.push(nested[s].reply_count);
+    } else {
+      data.rts.push(0);
+      data.mentions.push(0);
+    }
+  };
+
+  renderChart(data, d.start_point, interval);
+
 
 };
 

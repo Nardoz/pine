@@ -31,30 +31,48 @@ var app = $.sammy(function() {
     this.partial('templates/index.ms');
   });
 
+  this.get('/404', function() {
+    this.partial('templates/404.ms');
+  });
+
   this.get('/:screen_name(\\/)?([0-9]+)?', function() {
 
     this.screenName = this.params.screen_name;
     this.tweetId = this.params.splat[1];
+
+    var apiURL = '/api/' + this.screenName;
+
+    if(this.tweetId) {
+      apiURL += '/' + this.tweetId;
+    }
     
     var pine = new Pine();
     var that = this;
+    
+    this.load(apiURL, { json: true }).then(function(data) {
 
-    this.partial('templates/charts.ms').then(function() {
-      this.load('data.json').then(function(data) {
+      if(data.status === 'ok') {
+ 
+        this.partial('templates/charts.ms').then(function() {
+          that.load('templates/avatars.ms').then(function(tpl) {
 
-        pine.renderCharts(data);
+            pine.renderCharts(data);
 
-        var avatars = data.data.map(function(item) {
-          return item.people;
+            var avatars = data.data.map(function(item) {
+              return item.people;
+            });
+
+            $('#pics').append(Mustache.to_html(tpl, { avatars: avatars }));
+          });
+
         });
 
-        that.load('templates/avatars.ms').then(function(tpl) {
-          $('#pics').append(Mustache.to_html(tpl, { avatars: avatars }));
-        });
-
-      });
-      
+      } else {
+        that.redirect('#/404');
+      }
+        
     });
+    
   });
 	
 	this.post('#/search', function(context) {
@@ -67,7 +85,7 @@ var app = $.sammy(function() {
       this.redirect('#/' + params.screen_name);
     } 
     else {
-      this.redirect('#/');
+      this.redirect('#/404');
     }
 	});
 });
