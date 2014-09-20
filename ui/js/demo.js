@@ -41,7 +41,6 @@ var demoChart = function() {
 var renderChart = function (data, start_point, interval){
 
 
-
   $('#chart').highcharts({
     credits: false,
     legend: {
@@ -154,7 +153,7 @@ var renderChart = function (data, start_point, interval){
           enabled: false
         },
         pointInterval: interval*1000, // one hour
-        pointStart: start_point
+        pointStart: start_point * 1000
       }
     },
     series: [{
