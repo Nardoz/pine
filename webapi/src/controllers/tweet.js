@@ -72,7 +72,7 @@ var mock = {
 };
 
 
-TweetController.prototype.getById = function(req, res){
+TweetController.prototype.getByTweetId = function(req, res){
 	console.log("uid: " + req.params.uid);
 	console.log("tid: " + req.params.tid);
 

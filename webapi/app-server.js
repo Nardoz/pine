@@ -5,7 +5,7 @@ var express = require('express'),
 
 app.get('/:uid', tweetController.getByUserId);
 
-app.get('/:uid/:tid', tweetController.getById);
+app.get('/:uid/:tid', tweetController.getByTweetId);
 
 console.log('Starting server on port: ' + port);
 app.listen(port);
