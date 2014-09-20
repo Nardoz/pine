@@ -7,6 +7,8 @@ function get_user_or_tweet(text) {
 			return {screen_name: match[1], tweet_id: match[2]};
 		}
 	} 
+
+  return false;
 }
 
 var app = $.sammy(function() {
@@ -29,9 +31,11 @@ var app = $.sammy(function() {
     this.partial('templates/index.ms');
   });
 
-  this.get('/:screen_name', function() {
+  this.get('/:screen_name(\\/)?([0-9]+)?', function() {
 
     this.screenName = this.params.screen_name;
+    this.tweetId = this.params.splat[1];
+    
     var pine = new Pine();
     var that = this;
 
@@ -55,15 +59,19 @@ var app = $.sammy(function() {
 	
 	this.post('#/search', function(context) {
 		var params = get_user_or_tweet(this.params.query);
-		console.log(params);
-		this.load('templates/graph.ms').then(function(partial) { 
-			context.partials = {contents:partial};
-			// render the template and pass it through mustache
-			context.partial('templates/template.ms');
-		});
+
+    if(params && params.screen_name !== undefined && params.tweet_id !== undefined) {
+      this.redirect('#/' + params.screen_name + '/' + params.tweet_id);
+    } 
+    else if(params && params.screen_name !== undefined) {
+      this.redirect('#/' + params.screen_name);
+    } 
+    else {
+      this.redirect('#/');
+    }
 	});
 });
 
-  $(function() {
-    app.run()
-  });
+$(function() {
+  app.run()
+});
