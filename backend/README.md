@@ -4,6 +4,7 @@ Lee un archivo con tweets e inserta los datos en C*
 
 
 ## Pre Requisitos
+* sbt `brew install sbt`
 * Cassandra 2.0.9
 * Spark 1.0.2
 
