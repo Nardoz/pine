@@ -9,6 +9,13 @@ h1, h5 {
   margin: 0
 }
 
+form {
+  margin: 10px auto;
+  width: 400px;
+  font-size: 10pt;
+  text-align: center;
+}
+
 #container {
   min-width: 310px; 
   height: 400px; 
