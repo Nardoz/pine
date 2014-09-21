@@ -15,18 +15,49 @@ h1, h5 {
   margin: 0 auto;
 }
 
+#chart {
+  width: 1000px;
+  margin: 0 auto;
+}
+
 ul {
   list-style: none;
 }
 
 #pics {
-  margin-left: 82px;
+  width: 1000px;
+  margin: 20px auto;
+  padding-left: 90px;
 }
 
 #pics ul {
-  width: 98px;
+  width: 70px;
   text-align: center;
-  float: left;
+  display: inline-table;
+  margin: 0;
+  padding: 0;
+  margin-right: 26px;
+  min-height: 10px;
+}
+
+#pics ul:last-child {
+  margin-right: 0px;
+}
+
+
+#pics li {
+  height: 70px;
+  width: 70px;
+  margin: 0;
+  padding: 0;
+}
+
+#pics a {
+  height: 60px;
+  width: 60px;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 #pics img {
@@ -35,12 +66,14 @@ ul {
   border: 3px solid rgba(124, 181, 236, 0.5);
   transition-duration: 0.08s;
   transition-timing-function: ease-in;
+  opacity: 0.8;
 }
 
 #pics img:hover {
   border: 3px solid rgba(124, 181, 236, 0.7);
-  width: 58px;
+  /*width: 50px;*/
   border-radius: 37px;
+  opacity: 1;
 }
 
 #pics ul li:nth-child(1) img {

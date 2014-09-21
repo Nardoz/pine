@@ -3,7 +3,7 @@
     {{#.}}
       <li>
         <a href="https://twitter.com/{{screen_name}}">
-          <img src="{{pic}}">
+          <img src="{{pic}}"/>
         </a>
       </li>
     {{/.}}

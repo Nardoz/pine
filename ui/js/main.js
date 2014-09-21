@@ -48,8 +48,9 @@ var app = $.sammy(function() {
     
     var pine = new Pine();
     var that = this;
-    
+
     this.load(apiURL, { json: true }).then(function(data) {
+
 
       if(data.status === 'ok') {
  
@@ -58,11 +59,10 @@ var app = $.sammy(function() {
 
             pine.renderCharts(data);
 
-            var avatars = data.data.map(function(item) {
-              return item.people;
-            });
+            var avatars = pine.renderPics(data);
 
             $('#pics').append(Mustache.to_html(tpl, { avatars: avatars }));
+
           });
 
         });

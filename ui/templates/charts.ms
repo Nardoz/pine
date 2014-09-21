@@ -1,6 +1,6 @@
 <h1>
   {{screenName}}
-<h1>
+</h1>
 
 {{#tweetId}}
    <h5>Tweet ID: {{tweetId}}</h5>
