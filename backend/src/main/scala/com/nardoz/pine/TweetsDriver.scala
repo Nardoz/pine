@@ -7,20 +7,21 @@ import com.datastax.spark.connector._
 import com.nardoz.pine.Utils._
 
 object TweetsDriver extends App {
+  val ks = "nardoz_pine"
 
-  if (args.length != 1) {
-    println("Usage: TweetsDriver <filename>")
+  if (args.length != 1 && args.length != 2) {
+    println("Usage: TweetsDriver <filename> [cassandra-node]")
     sys.exit(1)
   }
 
-  val ks = "nardoz_pine"
+  val filename = args(0)
+  val hostname = if (args.length < 2) "localhost" else args(1)
 
   val conf = new SparkConf()
   conf.setAppName("Nardoz.Pine TweetsDriver")
-  conf.set("spark.cassandra.connection.host", "localhost")
+  conf.set("spark.cassandra.connection.host", hostname)
   val sc = new SparkContext(conf)
 
-  val filename = args(0)
   //  val filename = "../data/tweets.json.gz"
   val jsons = sc.textFile(filename)
   val data = jsons.flatMap(fromJsonToDataPoint)
@@ -28,6 +29,9 @@ object TweetsDriver extends App {
   val tweets = data.map { d =>
     (d.tweetId, Tweet(d.tweetId, ((d.createdAt / 60) * 60), d.screenName, d.pic, d.followersCount))
   }
+
+  // --------------------------------
+  // ReTweet logic
 
   val rts = data.
     filter(d => d.retweetedStatusId > 0). // only those with RTs
@@ -48,9 +52,9 @@ object TweetsDriver extends App {
     case ((tweetId, screenName, createdAt), it) => TweetStats(tweetId, createdAt, screenName, it.size)
   }
 
-  rtsByTweetIdByMinuteCount.saveToCassandra(ks, "tweet_stats")
+  rtsByTweetIdByMinuteCount.saveToCassandra(ks, "rts_tweet_stats")
 
-  val flockTable = rtsByTweetIdByMinute.flatMap {
+  val flockRts = rtsByTweetIdByMinute.flatMap {
     case ((tweetId, screenName, createdAt), it) => it.map {
       case (tweetId, (rtTweet, originalTweet)) =>
 
@@ -58,6 +62,36 @@ object TweetsDriver extends App {
     }
   }
 
-  flockTable.saveToCassandra(ks, "flock")
+  flockRts.saveToCassandra(ks, "rts_flock")
+
+  // --------------------------------
+  // REPLIES logic
+
+  val replies = data.filter(d => d.inReplyToStatusId > 0).map { d =>
+    (d.inReplyToStatusId, Tweet(d.tweetId, ((d.createdAt / 60) * 60), d.screenName, d.pic, d.followersCount))
+  }
+
+  val tweetsWithReplies = replies.join(tweets)
+
+  val repliesByTweetIdByMinute = tweetsWithReplies.groupBy {
+    case (tweetId, (replyTweet, originalTweet)) => (tweetId, originalTweet.screenName, replyTweet.createdAt)
+  }
+
+  val repliesByTweetIdByMinuteCount = repliesByTweetIdByMinute.map {
+    case ((tweetId, screenName, createdAt), it) => TweetStats(tweetId, createdAt, screenName, it.size)
+  }
+
+  repliesByTweetIdByMinuteCount.saveToCassandra(ks, "replies_tweet_stats")
+
+  val flockReplies = repliesByTweetIdByMinute.flatMap {
+    case ((tweetId, screenName, createdAt), it) => it.map {
+      case (tweetId, (replyTweet, originalTweet)) =>
+
+        Flock(tweetId, createdAt, screenName, replyTweet.screenName, replyTweet.pic, replyTweet.followersCount)
+    }
+  }
+
+  flockReplies.saveToCassandra(ks, "replies_flock")
+
 }
 

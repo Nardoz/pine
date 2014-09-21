@@ -54,7 +54,7 @@ object Utils {
 
   case class Tweet(tweetId: Long, createdAt: Long, screenName: String, pic: String, followersCount: Int)
 
-  case class TweetStats(tweetId: Long, createdAt: Long, screenName: String, rts: Int)
+  case class TweetStats(tweetId: Long, createdAt: Long, screenName: String, count: Int)
 
   case class Flock(tweetId: Long, createdAt: Long, screenName: String, fanScreenName: String, fanPic: String, fanFollowers: Long)
 
