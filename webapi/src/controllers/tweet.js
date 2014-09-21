@@ -1,3 +1,7 @@
+var services = require('../services.js').services;
+
+exports.tweetController = new TweetController();
+
 function TweetController(){};
 
 
