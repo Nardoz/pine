@@ -12,6 +12,9 @@ function get_user_or_tweet(text) {
 }
 
 var app = $.sammy(function() {
+
+  var input = '';
+
 	this.debug = true;
 	// include the plugin and alias mustache() to ms()
 	this.use('Mustache', 'ms');
@@ -37,6 +40,7 @@ var app = $.sammy(function() {
 
   this.get('/:screen_name(\\/)?([0-9]+)?', function() {
 
+    this.input = input;
     this.screenName = this.params.screen_name;
     this.tweetId = this.params.splat[1];
 
@@ -77,6 +81,7 @@ var app = $.sammy(function() {
 	
 	this.post('#/search', function(context) {
 		var params = get_user_or_tweet(this.params.query);
+    input = this.params.query;
 
     if(params && params.screen_name !== undefined && params.tweet_id !== undefined) {
       this.redirect('#/' + params.screen_name + '/' + params.tweet_id);

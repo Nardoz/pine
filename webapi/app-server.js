@@ -5,7 +5,7 @@ var express = require('express'),
 
 app.get('/api/:uid', tweetController.getByUserId);
 
-app.get('api/:uid/:tid', tweetController.getByTweetId);
+app.get('/api/:uid/:tid', tweetController.getByTweetId);
 
 app.use(express.static('../ui'));
 

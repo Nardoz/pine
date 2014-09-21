@@ -1,2 +1,2 @@
-<h1>Nardoz presents</h1>
+<h1>Pine</h1>
 {{>contents}}

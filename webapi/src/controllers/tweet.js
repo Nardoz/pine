@@ -1,3 +1,7 @@
+var services = require('../services.js').services;
+
+exports.tweetController = new TweetController();
+
 function TweetController(){};
 
 
@@ -72,11 +76,20 @@ var mock = {
 };
 
 
-TweetController.prototype.getByTweetId = function(req, res){
+TweetController.prototype.getByTweetId = function(req, res) {
 	console.log("uid: " + req.params.uid);
 	console.log("tid: " + req.params.tid);
+	var frontResult = [];
+	services.DB.getTweetByUserId(req.params.uid, req.params.tid, function (err, result) {
+		for (var i = 0; i < result.length; i++) {
+			var r = result[i];
+			//TODO: Fill with cassandra data -> json for UI
+			frontResult.push({
 
-	res.send(mock);
+			});
+		};
+		res.send(frontResult);
+	});
 };
 
 
