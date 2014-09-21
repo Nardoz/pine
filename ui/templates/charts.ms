@@ -3,7 +3,7 @@
 {{#input}}
   <form action="#/search" method="post">
     <input type="text" name="query" value="{{input}}">
-    <input type="submit">
+    <input type="submit" value="Enviar">
   </form>
 {{/input}}
 {{^input}}
