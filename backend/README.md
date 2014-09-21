@@ -1,5 +1,4 @@
 # Pine
-
 ## Pine Processor
 Lee un archivo con tweets e inserta los datos en C*
 
@@ -13,10 +12,13 @@ sbt assembly && spark-shell -i extras/shell-init.scala --jars target/scala-2.10/
 
 ## Running the App
 
+    Driver Parameters: TweetsDriver <filename> [cassandra node]
+
+    Example:
     spark-submit --master 'local[*]' \
     --class com.nardoz.pine.TweetsDriver \
     target/scala-2.10/pine-backend-assembly-0.1.0.jar \
-    ../data/tweets.json.gz
+    ../data/tweets.json.gz Arjones.local
 
 ## CQL
 Sample CQL query to obtain data
