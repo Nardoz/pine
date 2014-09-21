@@ -8,14 +8,14 @@ function DB(){
 			throw err;
 		} else {
 			console.log("Connection successfully");
-			db2.getTweetByUserId("", "", function(){});
+			 db2.getTweetByUserId("", "", function(){});
 		}
 	});
 
 };
 
 DB.prototype.getTweetByUserId = function(uid, tid, callback) {
-	client.execute('SELECT * from tweet_stats where screen_name = ?',
+	client.execute('SELECT * from rts_tweet_stats where screen_name = ?',
 		['cfkargentina'], function(err, result){
 
 		if(err){
