@@ -1,32 +1,34 @@
-var Connection = require('cassandra-client').Connection,
-	conn = new Connection({
-		host: "127.0.0.1",
-		port: 9160,
-		keyspace: "nardoz_pine",
-		cql_version: '2.0.0'
-	});
+var cassandra = require('cassandra-driver'),
+client = new cassandra.Client({contactPoints: ['192.168.10.77'], keyspace: "nardoz_pine"});
+
 
 function DB(){
-	conn.connect(function(err){
+	client.connect(function(err){
 		if(err){
 			throw err;
 		} else {
 			console.log("Connection successfully");
+			db2.getTweetByUserId("", "", function(){});
 		}
 	});
 
 };
 
-DB.prototype.getTweetByUserId = function(uid, tid, callback){
-	conn.execute('SELECT * from tweet_stats where screen_name = ?',
-		['arjones'], function(err, rows){
+DB.prototype.getTweetByUserId = function(uid, tid, callback) {
+	client.execute('SELECT * from tweet_stats where screen_name = ?',
+		['cfkargentina'], function(err, result){
+
 		if(err){
 			callback(err, null);
 		} else {
-			console.log("rowCount: " + rows.rowCount());
-			callback(null, rows);
+			debugger;
+			console.log("rowCount: " + result.rows.length);
+			callback(null, result.rows);
 		}
 	});
 };
 
-exports.DB = new DB();
+var db2 = new DB();
+exports.DB = db2;
+
+
