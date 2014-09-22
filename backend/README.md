@@ -9,7 +9,10 @@ Lee un archivo con tweets e inserta los datos en C*
 * Spark 1.0.2
 
 ## Usando con Spark-Shell
-sbt assembly && spark-shell -i extras/shell-init.scala --jars target/scala-2.10/pine-backend-assembly-0.1.0.jar
+```
+sbt assembly && \
+  spark-shell -i extras/shell-init.scala --jars target/scala-2.10/pine-backend-assembly-0.1.0.jar
+```
 
 ## Running the App
 
