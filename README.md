@@ -20,8 +20,9 @@ git checkout -- Library/Formula/apache-spark.rb
 ###Instalar Cassandra
 ```
 brew install cassandra
-
-# Crear el Keyspace en Cassandra
+```
+####Crear el Keyspace en Cassandra
+```
 cassandra -f
 ```
 ####(en otra ventana)
