@@ -104,13 +104,17 @@ object TweetsDriver extends App {
     case ((tweetId, screenName, createdAt), it) => ((tweetId, createdAt), TweetStats(tweetId, createdAt, screenName, it.size))
   }
 
+  // Implement a Join as the patch for new Spark version
+  // once it is released we can just delete this part of the code
+  // ref: https://github.com/staple/spark/blob/7ac0aa9a01195cfb8f6abd662b0d97513dd585ac/core/src/main/scala/org/apache/spark/rdd/PairRDDFunctions.scala#L517
   val rddCogroup = rtsByTweetIdByMinutePair.cogroup(repliesByTweetIdByMinutePair)
-  val fullJoined = rddCogroup.flatMapValues {
+    val fullJoined = rddCogroup.flatMapValues {
     case (vs, Seq()) => vs.map(v => (Some(v), None))
     case (Seq(), ws) => ws.map(w => (None, Some(w)))
     case (vs, ws) => for (v <- vs; w <- ws) yield (Some(v), Some(w))
   }
 
+  // UGLY!!! need improvement
   val tweetStatsTable = fullJoined.map {
     case ((tweetId, createdAt), (Some(TweetStats(_, _, screenName, rtCount)), Some(TweetStats(_, _, _, replyCount)))) => TweetCounter(tweetId, createdAt, screenName, rtCount, replyCount)
     case ((tweetId, createdAt), (None, Some(TweetStats(_, _, screenName, replyCount)))) => TweetCounter(tweetId, createdAt, screenName, 0, replyCount)
