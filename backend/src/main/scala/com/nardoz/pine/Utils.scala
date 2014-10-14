@@ -4,12 +4,16 @@ import scala.util.Try
 import org.json4s.ParserUtil.ParseException
 
 object Utils {
+
   import org.json4s._
   import org.json4s.native._
   import org.json4s.native.JsonMethods._
+
   implicit val formats = org.json4s.DefaultFormats
 
   //  val sf = new java.text.SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZZ yyyy")
+
+  def roundDownByMinute(epoch: Long) = (epoch / 60) * 60
 
   def fromJsonToDataPoint(payload: String): Option[DataPoint] = {
     try {
@@ -48,13 +52,16 @@ object Utils {
 
   // Generic Structure to extract from JSON
   case class DataPoint(
-    tweetId: Long, createdAt: Long, screenName: String, pic: String, followersCount: Int,
-    inReplyToStatusId: Long,
-    retweetedStatusId: Long, retweetedScreenName: String, retweetedPic: String, retweetedFollowersCount: Int)
+                        tweetId: Long, createdAt: Long, screenName: String, pic: String, followersCount: Int,
+                        inReplyToStatusId: Long,
+                        retweetedStatusId: Long, retweetedScreenName: String, retweetedPic: String, retweetedFollowersCount: Int)
 
   case class Tweet(tweetId: Long, createdAt: Long, screenName: String, pic: String, followersCount: Int)
 
   case class TweetStats(tweetId: Long, createdAt: Long, screenName: String, count: Int)
+
+  case class TweetCounter(tweetId: Long, createdAt: Long, screenName: String, retweetCount: Int = 0, replyCount: Int = 0)
+
 
   case class Flock(tweetId: Long, createdAt: Long, screenName: String, fanScreenName: String, fanPic: String, fanFollowers: Long)
 

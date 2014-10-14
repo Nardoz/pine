@@ -5,3 +5,5 @@ project/project/target/
 .project
 .DS_Store
 .cache
+.idea/
+.idea_modules/

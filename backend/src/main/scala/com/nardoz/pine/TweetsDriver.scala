@@ -3,6 +3,7 @@ package com.nardoz.pine
 
 import org.apache.spark._
 import org.apache.spark.SparkContext._
+
 import com.datastax.spark.connector._
 import com.nardoz.pine.Utils._
 
@@ -27,7 +28,7 @@ object TweetsDriver extends App {
   val data = jsons.flatMap(fromJsonToDataPoint)
 
   val tweets = data.map { d =>
-    (d.tweetId, Tweet(d.tweetId, ((d.createdAt / 60) * 60), d.screenName, d.pic, d.followersCount))
+    (d.tweetId, Tweet(d.tweetId, roundDownByMinute(d.createdAt), d.screenName, d.pic, d.followersCount))
   }
 
   // --------------------------------
@@ -37,10 +38,10 @@ object TweetsDriver extends App {
     filter(d => d.retweetedStatusId > 0). // only those with RTs
     map { d =>
 
-      (d.retweetedStatusId, // Tweet Original 
-        Tweet(d.tweetId, ((d.createdAt / 60) * 60), d.screenName, d.pic, d.followersCount) // this is the ReTweet
-        )
-    }
+    (d.retweetedStatusId, // Tweet Original
+      Tweet(d.tweetId, roundDownByMinute(d.createdAt), d.screenName, d.pic, d.followersCount) // this is the ReTweet
+      )
+  }
 
   val tweetsWithRTs = rts.join(tweets)
 
@@ -68,7 +69,7 @@ object TweetsDriver extends App {
   // REPLIES logic
 
   val replies = data.filter(d => d.inReplyToStatusId > 0).map { d =>
-    (d.inReplyToStatusId, Tweet(d.tweetId, ((d.createdAt / 60) * 60), d.screenName, d.pic, d.followersCount))
+    (d.inReplyToStatusId, Tweet(d.tweetId, roundDownByMinute(d.createdAt), d.screenName, d.pic, d.followersCount))
   }
 
   val tweetsWithReplies = replies.join(tweets)
@@ -93,5 +94,28 @@ object TweetsDriver extends App {
 
   flockReplies.saveToCassandra(ks, "replies_flock")
 
-}
 
+  // Joining
+  val rtsByTweetIdByMinutePair = rtsByTweetIdByMinute.map {
+    case ((tweetId, screenName, createdAt), it) => ((tweetId, createdAt), TweetStats(tweetId, createdAt, screenName, it.size))
+  }
+
+  val repliesByTweetIdByMinutePair = repliesByTweetIdByMinute.map {
+    case ((tweetId, screenName, createdAt), it) => ((tweetId, createdAt), TweetStats(tweetId, createdAt, screenName, it.size))
+  }
+
+  val rddCogroup = rtsByTweetIdByMinutePair.cogroup(repliesByTweetIdByMinutePair)
+  val fullJoined = rddCogroup.flatMapValues {
+    case (vs, Seq()) => vs.map(v => (Some(v), None))
+    case (Seq(), ws) => ws.map(w => (None, Some(w)))
+    case (vs, ws) => for (v <- vs; w <- ws) yield (Some(v), Some(w))
+  }
+
+  val tweetStatsTable = fullJoined.map {
+    case ((tweetId, createdAt), (Some(TweetStats(_, _, screenName, rtCount)), Some(TweetStats(_, _, _, replyCount)))) => TweetCounter(tweetId, createdAt, screenName, rtCount, replyCount)
+    case ((tweetId, createdAt), (None, Some(TweetStats(_, _, screenName, replyCount)))) => TweetCounter(tweetId, createdAt, screenName, 0, replyCount)
+    case ((tweetId, createdAt), (Some(TweetStats(_, _, screenName, rtCount)), None)) => TweetCounter(tweetId, createdAt, screenName, rtCount, 0)
+  }
+
+  tweetStatsTable.saveToCassandra(ks, "tweet_stats")
+}

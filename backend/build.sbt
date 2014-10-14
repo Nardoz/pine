@@ -43,10 +43,11 @@ mergeStrategy in assembly := {
 }
 
 
-val sparkVersion = "1.0.2"
+val sparkVersion = "1.1.0"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided" withSources() withJavadoc(),
-  "com.datastax.spark" %% "spark-cassandra-connector" % "1.0.0" withSources() withJavadoc(),
+  "org.apache.spark" %% "spark-sql" %sparkVersion % "provided" withSources() withJavadoc(),
+  "com.datastax.spark" %% "spark-cassandra-connector" % "1.2.0-SNAPSHOT" withSources() withJavadoc(),
   "org.json4s" %% "json4s-native" % "3.2.10"
 )
