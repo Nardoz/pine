@@ -1,0 +1,9 @@
+{
+  "cassandra": {
+    "contactPoints": [ "localhost" ],
+    "keyspace": "nardoz_pine"
+  },
+  "app": {
+    "port": 8001
+  }
+}

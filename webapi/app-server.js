@@ -1,15 +1,13 @@
 var express = require('express'),
-	app = express(),
-	port = 8001,
-	tweetController = require('./src/controllers/tweet').tweetController;
-
-app.get('/api/:uid', tweetController.getByUserId);
-
-app.get('/api/:uid/:tid', tweetController.getByTweetId);
+  	app = express(),
+    config = require('./config'),
+  	tweetController = require('./src/controllers/tweet');
 
 app.use(express.static('../ui'));
 
+app.get('/api/:screenName', tweetController.getByScreenName);
+//app.get('/api/:screenName/:tweetId', tweetController.getByTweetId);
 
+console.log('Starting API server on port: ' + config.app.port);
 
-console.log('Starting server on port: ' + port);
-app.listen(port);
+app.listen(config.app.port);

@@ -72,7 +72,7 @@ var app = $.sammy(function() {
         });
 
       } else {
-        that.redirect('#/404');
+        //that.redirect('#/404');
       }
         
     });

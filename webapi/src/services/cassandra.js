@@ -1,34 +1,52 @@
-var cassandra = require('cassandra-driver'),
-client = new cassandra.Client({contactPoints: ['192.168.10.77'], keyspace: "nardoz_pine"});
+var config = require('../../config'),
+		cassandra = require('cassandra-driver'),
+		client = new cassandra.Client(config.cassandra);
 
 
-function DB(){
+function Database() {
+
 	client.connect(function(err){
 		if(err){
 			throw err;
 		} else {
-			console.log("Connection successfully");
-			 db2.getTweetByUserId("", "", function(){});
+			console.log('Successfully connected to Cassandra');
 		}
 	});
 
 };
 
-DB.prototype.getTweetByUserId = function(uid, tid, callback) {
-	client.execute('SELECT * from rts_tweet_stats where screen_name = ?',
-		['cfkargentina'], function(err, result){
+
+Database.prototype.getRetweets = function(args, callback) {
+
+	var column = 'screen_name';
+	var param  = args.screenName;
+
+	if(args && args.tweetId) {
+		tweetId = 'tweet_id';
+		param  = args.tweetId;
+	} 
+
+	client.execute('SELECT * from rts_tweet_stats where ' + column + ' = ? LIMIT 1000', [ param ], function(err, result) {
 
 		if(err){
 			callback(err, null);
 		} else {
-			debugger;
-			console.log("rowCount: " + result.rows.length);
-			callback(null, result.rows);
+
+			var tweets = result.rows.map(function(item) {
+
+				return {
+					ts: parseInt(item.created_at.toString()),
+					rt_count: item.count,
+					reply_count: 0,
+					people: []
+				};
+
+			});
+
+			callback(null, tweets);
 		}
 	});
 };
 
-var db2 = new DB();
-exports.DB = db2;
 
-
+exports.Database = new Database();
