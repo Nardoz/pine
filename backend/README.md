@@ -4,12 +4,35 @@ Lee un archivo con tweets e inserta los datos en C*
 
 
 ## Pre Requisitos
-* sbt `brew install sbt`
-* Cassandra 2.0.9
-* Spark 1.0.2
+* sbt
+* Cassandra
+* Apache Spark
+
+```bash
+$ brew install sbt cassandra apache-spark
+```
+
+##Creando el modelo de datos
+```bash
+cassandra -f
+
+# Abrir otra ventana
+cqlsh -f extras/nardoz_pine.cql
+
+
+cqlsh -k nardoz_pine
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 2.1.6 | CQL spec 3.2.0 | Native protocol v3]
+Use HELP for help.
+
+cqlsh:nardoz_pine> DESCRIBE TABLES;
+
+rts_tweet_stats  replies_tweet_stats  rts_flock  replies_flock
+```
+
 
 ## Usando con Spark-Shell
-```
+```bash
 sbt assembly && \
   spark-shell -i extras/shell-init.scala --jars target/scala-2.10/pine-backend-assembly-0.1.0.jar
 ```
