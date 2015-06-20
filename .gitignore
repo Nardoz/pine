@@ -1,3 +1,5 @@
 .DS_Store
 webapi/node_modules/*
 data/*
+backend/.idea/
+backend/.idea_modules/
